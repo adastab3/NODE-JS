@@ -3,7 +3,7 @@ function factorial (num){
         return 1
     }else {
         for (let i = num -1; i >=1; i--){
-            num =num*1
+            num =num*i
         }
         return num
     }
