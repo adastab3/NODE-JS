@@ -10,7 +10,7 @@ app.use(express.static('public'))
 
 //1. Lista de animales en la ruta '/'
 
-app.get(('/', (req, res)=>{
+app.get(('/animales', (req, res)=>{
     /*let html =""
     animales.forEach((animal, i) => {
         html += `<li>${animal.nombre}</li>`    
