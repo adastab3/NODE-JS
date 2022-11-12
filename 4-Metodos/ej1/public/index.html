@@ -7,18 +7,27 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/personas" method="GET">
-        <button type="submit" onclick="mostrarNombre()">Mostrar</button>
-    </form>
+    <h1>Ejercicios Métodos Express</h1>
+    <div id="tabla"></div>
+    
+
+
     <script>
-        function mostrarNombre(){
-            fetch('/personas', {
-                method:"POST",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(res =>res.json()).then(console.log(res))
-        }
+       
+            fetch('/personas')
+            .then(res =>res.json())
+            .then(res =>{
+                let tabla = ""
+                res.forEach(persona => {
+                tabla += `<tr><td>${persona.nombre}</td><td>${persona.apellido}</td><td>${persona.edad}</td></tr>`
+            })
+                document.getElementById("tabla").innerHTML= `<table><tr><th>Nombre</th><th>Apellido</th><th>Edad</th>${tabla}</tr></table>`
+            })
+
+         
+                
+       
+        
 
     </script>
     
