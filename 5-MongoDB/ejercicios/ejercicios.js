@@ -25,5 +25,9 @@ db.samples_pokemon.find({$and: [{candy_count: {$gte:25}}, {avg_spawn: {$gt: 5}}]
 //9. Crea una consulta en la que aparezcan los pokémon que tengan ‘weaknesses’ igual a ‘Ground’ y ‘multipliers’ igual a null
 db.samples_pkemon.find({$and: [{weaknesses: "Ground"},{multipliers: null}]})
 
+//10. Crea una consulta en la que aparezcan los pokémon ordenados por la propiedad “avg_spawns” de manera descendente.
+db.samples_pkemon.find().sort({avg_spawns: -1})
 
+//11. Crea una consulta en la que aparezcan los pokémon que tengan ‘candy_count’ menor que 100. Ordénalos de mayor a menor.
 
+db.samples_pkemon.find({candy_count: {$lt:100}}).sort({candy_count:1})
