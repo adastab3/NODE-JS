@@ -6,6 +6,7 @@ const MongoClient = require('mongodb').MongoClient
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+app.use(express.static('public'))
 
 MongoClient.connect('mongodb://127.0.0.1:27017', {
     useNewUrlParser: true,
@@ -16,6 +17,24 @@ MongoClient.connect('mongodb://127.0.0.1:27017', {
         app.locals.db = client.db('clase')
     }).catch(err => console.log(`MongoDB no conectado. Error: ${err}`))
 
+
+// ruta GET para mostrar todas las mesas que tenemos en nuestra BD
+
+app.get('/api/libros', (req, res) =>
+    app.locals.db.collection('libros').find().toArray((err, data) => {
+        err
+            ? res.send({ mesanje: "Error al consultar la base de datos", data: err })
+            : res.send({ mesanje: "Busqueda efectuada", results: data })
+    }
+    ))
+
+app.get('/api/libros/:titulo', (req, res) =>
+    app.locals.db.collection('libros').find({ titulo: req.params.titulo }).toArray((err, data) => {
+        err
+            ? res.send({ mesanje: "Error al leer la base de datos", data: err })
+            : res.send({ mesanje: data.length > 0 ? "Busqueda efectuada" : "No se ha encontrado " + req.params.titulo, results: data })
+    }
+    ))    
 
 
 //creamos una ruta POST para rellenar la base de datos
@@ -36,23 +55,6 @@ app.post('/api/nuevoLibro/:titulo', (req, res) => {
     })
 })
 
-// ruta GET para mostrar todas las mesas que tenemos en nuestra BD
-
-app.get('/api/libros', (req, res) =>
-    app.locals.db.collection('libros').find().toArray((err, data) => {
-        err
-            ? res.send({ mesanje: "Error al consultar la base de datos", data: err })
-            : res.send({ mesanje: "Busqueda efectuada", results: data })
-    }
-    ))
-
-app.get('/api/libros/:titulo', (req, res) =>
-    app.locals.db.collection('libros').find({ titulo: req.params.titulo }).toArray((err, data) => {
-        err
-            ? res.send({ mesanje: "Error al leer la base de datos", data: err })
-            : res.send({ mesanje: data.length > 0 ? "Busqueda efectuada" : "No se ha encontrado " + req.params.titulo, results: data })
-    }
-    ))
 
 // ruta PUT Todas las mesas del color indicado en la ruta cambiarán su color a granate
 
@@ -60,7 +62,7 @@ app.put('/api/editarLibro/:titulo', (req, res) => {
     app.locals.db.collection('libros').updateOne({ titulo: req.params.titulo }, { $set: { leido: true } }, (err, data) => {
         err
             ? res.send({ mesanje: "Error al modificar el estado de " + req.params.titulo, data: err })
-            : res.send({ mesanje: data.modifiedCount > 0 ? "Se ha modificado correctamente el estado de " + req.params.titulo : "No ha podido modificarse el estado de " + req.params.titulo, data: data })
+            : res.send({ modificado: data.modifiedCount > 0, mesanje: data.modifiedCount > 0 ? "Se ha modificado correctamente el estado de " + req.params.titulo : "No ha podido modificarse el estado de " + req.params.titulo, results: data })
     })
 })
 

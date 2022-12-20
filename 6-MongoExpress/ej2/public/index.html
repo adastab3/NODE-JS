@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="lista"></div>
+    <div id="feedback"></div>
+    <script>
+      render()
+      function render(){
+      fetch('/api/libros').then(res=>res.json()).then(res=>{
+        let html =""
+        res.results.forEach(libro => {
+            html += `<tr><td>${libro.titulo}</td><td><button ${libro.leido? 'disabled' : ''} type="button" onclick="leer('${libro.titulo}')">${libro.leido? 'Leído' : 'Leer' }</button></td></tr>`
+        });
+        document.getElementById('lista').innerHTML = `<table><tr><th>Título</th><th>Leído</th></tr><tr>${html}</tr></table>`
+        document.getElementById('feedback').innerHTML=''
+      })
+    }  
+
+
+      function leer(titulo){
+        fetch(`/api/editarlibro/${titulo}`, {method:'PUT'}).then(res=>res.json()).then(res=>{
+          let feedback = document.getElementById('feedback')
+          res.modificado
+          ? feedback.innerHTML= "<p>Modificado correctamente</p>"
+          : feedback.innerHTML= "<p>NO Modificado</p>"
+        render()
+        })
+      }
+
+
+    </script>
+</body>
+</html>
