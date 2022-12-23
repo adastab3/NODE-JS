@@ -10,6 +10,8 @@ function agregar() {
         pos: document.getElementById("pos").value,
         precio: document.getElementById("precio").value
     }
+
+    if(menu.numero.length > 0 && menu.pp.length > 0 && menu.sp.length > 0 && menu.pos.length > 0 && menu.precio.length > 0){
     fetch('/api/nuevoMenu', {
         method: "POST",
         headers: {
@@ -25,6 +27,9 @@ function agregar() {
         document.getElementById("precio").value = ""
 
     })
+    }else{
+        feedback(true, "El formulario debe estar completo")
+    }
 
 }
 
