@@ -65,15 +65,29 @@ app.put('/api/editarMenu', (req, res) => {
         err
             ? res.send({ error: true, mensaje: " Conexion fallida a la base de datos", data: err })
             : data.matchedCount < 1
-                ? res.send({ error: true, mensaje: " Menu no existe en la base de datos", data: err })
+                ? res.send({ error: true, mensaje: " Menu no existe en la base de datos", data: data })
                 : data.modifiedCount < 1
-                    ? res.send({ error: true, mensaje: " Menu no modificado en la base de datos", data: err })
+                    ? res.send({ error: true, mensaje: " Menu no modificado en la base de datos", data: data })
                     : res.send({ error: false, mensaje: `Menú nº ${req.body.numero} modificado en la base de datos`, data: data })
     })
 })
 
 
-//ruta DELETE borrar menu
+//ruta DELETE /api/borrarMenu para borrar un menu existente
+
+app.delete('/api/borrarMenu', (req,res)=>{
+    app.locals.db.collection('restaurante').deleteOne({ numero: parseInt(req.body.numero)}, (err,data)=>{
+        err
+         ? res.send({ error:true, mensaje: 'Error al consultar la base de datos', data: err})
+         : data.deletedCount < 1
+            ? res.send({ error: true, mensaje: 'No se ha encontrado en la base de datos', data: data})
+            : res.send({
+                error: false,
+                mensaje: `Menú nº ${req.body.numero} borrado de la BBDD`,
+                results: data
+            })
+    })
+})
 
 
 app.listen(port, err => {
